@@ -30,7 +30,7 @@
             <a v-bind:href="link">More products like this</a>
             <p v-if="inStock">In Stock</p>
             <p v-else :class="{Nostock: !inStock}">Out of Stock</p>
-            <span v-show="OnSale">On Sale</span>
+            <span>{{ sale }}</span>
 <!--            <span v-if="OnSale">On Sale</span>-->
 <!--            <span v-else>Not on Sale</span>-->
             <ul>

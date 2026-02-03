@@ -7,7 +7,7 @@ let app = new Vue({
         link: "More products like this",
         selectedVariant: 0,
         altText: "A pair of socks",
-        inStock: false,
+        inStock: true,
         OnSale: true,
         details: ['80% cotton', '20% polyester', 'Gender-neutral'],
         variants: [
@@ -53,9 +53,9 @@ let app = new Vue({
         inStock(){
             return this.variants[this.selectedVariant].variantQuantity
         },
-        OnSale(){
-            if (OnSale === true)
-            return this.brand + ' ' + this.product;
+        sale(){
+            if (this.OnSale == true)
+            return this.brand + ' sells ' + this.product + ' with 0% discount ';
         }
 
     }
