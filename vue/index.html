@@ -12,43 +12,13 @@
 </head>
 <body>
 <div id="app">
-    <product :premium="premium"></product>
-    <product></product>
-    <product></product>
-<!--    <div class="product">-->
-<!--        <div class="product-image">-->
-<!--            <img v-bind:src="image" v-bind:alt="altText"/>-->
-<!--        </div>-->
-<!--        <div class="product-info">-->
-<!--            <h1>{{ title }}</h1>-->
-<!--            <p>{{ description }}</p>-->
-<!--            <a v-bind:href="link">More products like this</a>-->
-<!--            <p v-if="inStock">In Stock</p>-->
-<!--            <p>Shipping: {{ shipping }}</p>-->
-<!--            <p v-else :class="{Nostock: !inStock}">Out of Stock</p>-->
-<!--            <span>{{ sale }}</span>-->
-<!--            <ul>-->
-<!--                <li v-for="detail in details">{{ detail }}</li>-->
-<!--            </ul>-->
-<!--            <div-->
-<!--                    class="color-box"-->
-<!--                    v-for="(variant, index) in variants"-->
-<!--                    :key="variant.variantId"-->
-<!--                    :style="{ backgroundColor:variant.variantColor }"-->
-<!--                    @mouseover="updateProduct(index)"-->
-<!--            ></div>-->
-<!--            <div v-for="size in sizes">-->
-<!--                <p>{{ size }}</p>-->
-<!--            </div>-->
-<!--            </div>-->
-<!--            <div class="cart">-->
-<!--                <p>Cart({{ cart }})</p>-->
-<!--            </div>-->
-<!--            <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>-->
-<!--            <button v-on:click="SubFromCart">Sub from cart</button>-->
-
-<!--        </div>-->
-<!--    </div>-->
+    <div class="cart">
+        <p>Cart({{ cart.length }})</p>
+    </div>
+    <product :premium="premium"
+             @add-to-cart="updateCart"
+             @sub-from-cart="subCart">
+    </product>
 </div>
 </body>
 </html>

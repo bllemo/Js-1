@@ -45,11 +45,8 @@ Vue.component('product', {
             <p>{{ size }}</p>
         </div>
     </div>
-    <div class="cart">
-        <p>Cart({{ cart }})</p>
-    </div>
     <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
-    <button v-on:click="SubFromCart">Sub from cart</button>
+    <button v-on:click="subFromCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Sub from cart</button>
 </div>
 `,
     data() {
@@ -78,19 +75,18 @@ Vue.component('product', {
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-            cart: 0
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
-        SubFromCart() {
-            this.cart -= 1
-            if (this.cart <= 0) {
-                this.cart = 0
-            }
-        },
+        subFromCart() {
+             this.$emit('sub-from-cart', this.variants[this.selectedVariant].variantId);
+        //     this.cart -= 1
+        //     if (this.cart <= 0) {
+        //         this.cart = 0
+         },
         updateProduct(index) {
             this.selectedVariant = index;
             console.log(index);
@@ -122,7 +118,17 @@ Vue.component('product', {
     let app = new Vue({
         el: '#app',
         data: {
-            premium: true
+            premium: true,
+            cart: [],
+        },
+        methods: {
+            updateCart(id) {
+                this.cart.push(id);
+            },
+            subCart(id) {
+                this.cart.pop();
+            }
+
         }
     })
 
