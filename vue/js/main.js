@@ -56,12 +56,12 @@ Vue.component('product-review', {
     },
     methods:{
         onSubmit() {
-            if(this.name && this.review && this.rating) {
+            if(this.name && this.review && this.rating && this.recommendation) {
                 let productReview = {
                     name: this.name,
                     review: this.review,
                     rating: this.rating,
-                    recomendation: this.recommendation
+                    recommendation: this.recommendation
                 }
                 this.$emit('review-submitted', productReview)
                 this.name = null
@@ -72,7 +72,7 @@ Vue.component('product-review', {
                 if(!this.name) this.errors.push("Name required.")
                 if(!this.review) this.errors.push("Review required.")
                 if(!this.rating) this.errors.push("Rating required.")
-                if(!this.rating) this.errors.push("Rating required.")
+                if(!this.recommendation) this.errors.push("Recommendation required.")
             }
         }
     }
@@ -136,6 +136,7 @@ Vue.component('product', {
       <p>{{ review.name }}</p>
       <p>Rating: {{ review.rating }}</p>
       <p>{{ review.review }}</p>
+      <p>{{ review.recommendation }}</p>
       </li>
     </ul>
     </div>
