@@ -171,27 +171,35 @@ Vue.component('product', {
         }
     },
     template: `
-            <div class="product">
-                <div class="product-image">
-                    <img :src="image" :alt="altText"/>
+        <div class="product">
+            <div class="product-image">
+                <img :src="image" :alt="altText"/>
+            </div>
+            <div class="product-info">
+                <h1>{{ title }}</h1>
+                <p>{{ description }}</p>
+                <a :href="link">More products like this</a>
+                <p v-if="inStock">In stock</p>
+                <p v-else style="text-decoration: line-through">Out of Stock</p>
+                <span v-if="onSale"> On Sale </span>
+                <br><br>
+                <p>{{ sale }}</p>
+
+                <div class="sales-info">
+                    <p>
+                        {{ salecount }}
+                    </p>
                 </div>
-                <div class="product-info">
-                    <h1>{{ title }}</h1>
-                    <p>{{ description }}</p>
-                    <a :href="link">More products like this</a>
-                    <p v-if="inStock">In stock</p>
-                    <p v-else style="text-decoration: line-through">Out of Stock</p>
-                    <span v-if="onSale"> On Sale </span <br><br>
-                    <p>{{ sale }}</p>
-                    <div
-                        class="color-box"
-                        v-for="(variant, index) in variants"
-                        :key="variant.variantId"
-                        :style="{ backgroundColor: variant.variantColor }"
-                        @mouseover="updateProduct(index)"
-                    ></div>
-                    <h2>Available Sizes:</h2>
-                    <ul>
+                
+                <div
+                    class="color-box"
+                    v-for="(variant, index) in variants"
+                    :key="variant.variantId"
+                    :style="{ backgroundColor: variant.variantColor }"
+                    @mouseover="updateProduct(index)"
+                ></div>
+                <h2>Available Sizes:</h2>
+                 <ul>
                         <li v-for="size in sizes" :key="size">{{ size }}</li>
                     </ul>
                     <button @click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
@@ -201,51 +209,50 @@ Vue.component('product', {
                     <product-tabs :reviews="reviews" :shipping-cost="shipping" :details="details"></product-tabs>
                 </div>
             </div>
-            `,
+    `,
     data() {
         return {
-            reviews: [], // Массив для хранения отзывов
-            product: "Socks", // Название продукта
-            brand: 'Vue Mastery', // Бренд продукта
-            description: "A pair of warm, fuzzy socks", // Описание продукта
-            altText: "A pair of socks", // Альтернативный текст для изображения
-            selectedVariant: 0, // Выбранный вариант продукта
-            link: 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks', // Ссылка на другие продукты
-            onSale: true, // Статус распродажи
-            details: ['80% cotton', '20% polyester', 'Gender-neutral'], // Детали продукта
-            variants: [ // Варианты продукта
+            reviews: [],
+            product: "Socks",
+            brand: 'Vue Mastery',
+            description: "A pair of warm, fuzzy socks",
+            altText: "A pair of socks",
+            inventory: 100,
+            selectedVariant: 0,
+            link: 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks',
+            onSale: true,
+            details: ['80% cotton', '20% polyester', 'Gender-neutral'],
+            variants: [
                 {
                     variantId: 2234,
                     variantColor: 'green',
                     variantImage: "./assets/vmSocks-green-onWhite.jpg",
                     variantQuantity: 10,
+                    variantSaleCount: 0
                 },
                 {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
                     variantQuantity: 0,
+                    variantSaleCount: 0
                 }
             ],
-            sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'], // Доступные размеры
-            cart: [] // Корзина для хранения добавленных товаров
+            sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
         }
     },
     methods: {
         addToCart() {
-            // Добавляем товар в корзину
             this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
+            this.variants[this.selectedVariant].variantSaleCount++;
         },
         removeFromCart() {
-            // Удаляем товар из корзины
             this.$emit('remove-from-cart');
         },
         updateProduct(index) {
-            // Обновляем выбранный вариант продукта
             this.selectedVariant = index;
         },
         addReview(productReview) {
-            // Добавляем отзыв о продукте
             this.reviews.push(productReview);
         }
     },
@@ -256,25 +263,34 @@ Vue.component('product', {
     },
     computed: {
         title() {
-            // Возвращаем полное название продукта
             return this.brand + ' ' + this.product;
         },
         image() {
-            // Возвращаем изображение выбранного варианта
             return this.variants[this.selectedVariant].variantImage;
         },
-        inStock(){
+        inStock() {
             return this.variants[this.selectedVariant].variantQuantity > 0;
         },
         sale(){
             if (this.OnSale === true)
                 return this.brand + ' sells ' + this.product + ' with 0% discount ';
         },
-        shipping()  {
+        shipping() {
             if (this.premium) {
                 return "Free";
             } else {
-                return 2.99
+                return 2.99;
+            }
+        },
+        salecount() {
+            const currentVariant = this.variants[this.selectedVariant];
+            const count = currentVariant.variantSaleCount;
+
+            if (count === 0) {
+                return `${this.brand} ${this.product} has no sales yet.`;
+            }
+            else {
+                return `${this.brand} ${this.product} has been sold ${count} times`;
             }
         }
     }
@@ -292,9 +308,9 @@ let app = new Vue({
             // Добавляем товар в корзину
             this.cart.push(id);
         },
-        updateRemoveFromCart() {
+        updateRemoveFromCart(id) {
             // Удаляем последний добавленный товар из корзины
-            this.cart.pop();
+            this.cart.pop(id);
         }
     },
 });
