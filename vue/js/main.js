@@ -3,15 +3,15 @@ let eventBus = new Vue();
 // Компонент для отображения вкладок с информацией о продукте
 Vue.component('product-tabs', {
     props: {
-        reviews: { // Пропс для отзывов о продукте
+        reviews: { // Отзывы о продукте
             type: Array,
             required: false
         },
-        shippingCost: { // Пропс для стоимости доставки
+        shippingCost: { // Стоимости доставки
             type: String,
             required: true
         },
-        details: { // Пропс для деталей продукта
+        details: { // Детали продукта
             type: Array,
             required: true
         }
@@ -219,13 +219,15 @@ Vue.component('product', {
                     variantId: 2234,
                     variantColor: 'green',
                     variantImage: "./assets/vmSocks-green-onWhite.jpg",
-                    variantQuantity: 10
+                    variantQuantity: 10,
+                    variantInventory: 25
                 },
                 {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                    variantQuantity: 0
+                    variantQuantity: 0,
+                    variantInventory: 0
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'], // Доступные размеры
@@ -251,12 +253,9 @@ Vue.component('product', {
         }
     },
     mounted() {
-        // Подписываемся на событие 'review-submitted' для добавления отзыва
-        eventBus.$on('review-submitted', this.addReview);
-    },
-    beforeDestroy() {
-        // Отписываемся от события перед уничтожением компонента
-        eventBus.$off('review-submitted', this.addReview);
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
     },
     computed: {
         title() {
@@ -267,13 +266,12 @@ Vue.component('product', {
             // Возвращаем изображение выбранного варианта
             return this.variants[this.selectedVariant].variantImage;
         },
-        inStock() {
-            // Проверяем, есть ли товар в наличии
+        inStock(){
             return this.variants[this.selectedVariant].variantQuantity > 0;
         },
-        sale() {
-            // Возвращаем статус распродажи
-            return this.onSale ? `${this.brand} ${this.product} is on sale!` : `${this.brand} ${this.product} is not on sale.`;
+        sale(){
+            if (this.OnSale === true)
+                return this.brand + ' sells ' + this.product + ' with 0% discount ';
         },
         shipping()  {
             if (this.premium) {
@@ -298,7 +296,7 @@ let app = new Vue({
             this.cart.push(id);
         },
         updateRemoveFromCart() {
-            // Удаляем последний добавленный товар из корзины if (this.cart.length > 0) {
+            // Удаляем последний добавленный товар из корзины
             this.cart.pop();
         }
     },
