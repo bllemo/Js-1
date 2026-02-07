@@ -209,7 +209,6 @@ Vue.component('product', {
             brand: 'Vue Mastery', // Бренд продукта
             description: "A pair of warm, fuzzy socks", // Описание продукта
             altText: "A pair of socks", // Альтернативный текст для изображения
-            inventory: 100, // Общее количество товара на складе
             selectedVariant: 0, // Выбранный вариант продукта
             link: 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks', // Ссылка на другие продукты
             onSale: true, // Статус распродажи
@@ -220,14 +219,12 @@ Vue.component('product', {
                     variantColor: 'green',
                     variantImage: "./assets/vmSocks-green-onWhite.jpg",
                     variantQuantity: 10,
-                    variantInventory: 25
                 },
                 {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
                     variantQuantity: 0,
-                    variantInventory: 0
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'], // Доступные размеры
